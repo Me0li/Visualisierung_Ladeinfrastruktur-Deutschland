@@ -4,8 +4,6 @@ var height = 1000;
 
 var projection = d3.geoEquirectangular().translate([width / 2, height / 2]);
 
-
-
 var svg = d3.select("svg").attr("width", width).attr("height", height);
 
 let mapGer = './assets/vg1000_topo.json'
