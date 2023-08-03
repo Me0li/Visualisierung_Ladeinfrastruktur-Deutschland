@@ -15,20 +15,35 @@ let chargerData
 let canvas = d3.select('#canvas')
 let tooltip = d3.select('#tooltip')
 
+const minDate = new Date(2017, 0, 1),
+      maxDate = new Date(2023, 3, 1),
+      interval = maxDate.getFullYear() - minDate.getFullYear() + 1,
+      startYear = minDate.getFullYear();
+
+let dataMonth = []
+for (let year = 0; year < interval; year++) {
+    for (let month = 0; month < 10; month++) {
+        if (month % 3 == 0 || month == 0) {
+            dataMonth.push(new Date(startYear + year, month, 1));
+        }
+    }
+  }
+
 var slider = d3
     .sliderHorizontal()
-    .min(2017)
-    .max(2023)
-    .step(1)
-    .width(300)
-    .ticks(7)
+    .min(new Date(2017, 0, 1))
+    .max(new Date(2023, 3, 1))
+    .tickFormat(d3.timeFormat('%B %Y'))
+    .marks(dataMonth)
+    .width(1200)
+    .ticks(26)
     .on('onchange', (val) => {
       d3.select('#value').text(val);
     });
 
   d3.select('#slider')
     .append('svg')
-    .attr('width', 500)
+    .attr('width', 1300)
     .attr('height', 100)
     .append('g')
     .attr('transform', 'translate(30,30)')
