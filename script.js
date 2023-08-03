@@ -15,10 +15,33 @@ let chargerData
 let canvas = d3.select('#canvas')
 let tooltip = d3.select('#tooltip')
 
+const sliderWidth = 300
+const d3SliderWidth = sliderWidth + 50
+
+var sliderYears = d3
+    .sliderHorizontal()
+    .min(new Date(2017, 0, 1))
+    .max(new Date(2023, 3, 1))
+    .tickFormat(d3.timeFormat('%Y'))
+    .step(1)
+    .width(sliderWidth)
+    .ticks(6)
+    .on('onchange', (val) => {
+        d3.select('#value').text(val);
+    });
+
+d3.select('#sliderYears')
+    .append('svg')
+    .attr('width', d3SliderWidth)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(sliderYears);
+
 const minDate = new Date(2017, 0, 1),
-      maxDate = new Date(2023, 3, 1),
-      interval = maxDate.getFullYear() - minDate.getFullYear() + 1,
-      startYear = minDate.getFullYear();
+    maxDate = new Date(2023, 3, 1),
+    interval = maxDate.getFullYear() - minDate.getFullYear() + 1,
+    startYear = minDate.getFullYear();
 
 let dataMonth = []
 for (let year = 0; year < interval; year++) {
@@ -27,27 +50,26 @@ for (let year = 0; year < interval; year++) {
             dataMonth.push(new Date(startYear + year, month, 1));
         }
     }
-  }
+}
 
-var slider = d3
+var sliderMonth = d3
     .sliderHorizontal()
     .min(new Date(2017, 0, 1))
     .max(new Date(2023, 3, 1))
-    .tickFormat(d3.timeFormat('%B %Y'))
+    .tickFormat(d3.timeFormat('%B'))
     .marks(dataMonth)
-    .width(1200)
-    .ticks(26)
+    .width(sliderWidth)
     .on('onchange', (val) => {
-      d3.select('#value').text(val);
+        d3.select('#value').text(val);
     });
 
-  d3.select('#slider')
+d3.select('#sliderMonth')
     .append('svg')
-    .attr('width', 1300)
+    .attr('width', d3SliderWidth)
     .attr('height', 100)
     .append('g')
     .attr('transform', 'translate(30,30)')
-    .call(slider);
+    .call(sliderMonth);
 
 //parses the jsonObject variable to a real parsedJsonObject and filters it into an array. 
 //In the array we need all the 'kreis_kreisfreie_stadt' attributes
@@ -130,7 +152,7 @@ async function filterMapJson(jsonObject) {
         const countyObject = {
             county: element,
             amount: 0
-          };
+        };
         arrExpanded.push(countyObject)
     });
     return arrExpanded
@@ -142,7 +164,7 @@ async function countChargerAmount(eChargerGeo, mapGer) {
 
     eChargerGeoArray.forEach(chargerElement => {
         counties.forEach(countiesElement => {
-            if(chargerElement == countiesElement.county) {
+            if (chargerElement == countiesElement.county) {
                 countiesElement.amount += 1
             }
         });
@@ -150,7 +172,7 @@ async function countChargerAmount(eChargerGeo, mapGer) {
     return counties
 }
 
-async function drawMap () {
+async function drawMap() {
     let chargerAmount = await countChargerAmount(eChargerGeo, mapGer)
     console.log(chargerAmount)
 
@@ -173,13 +195,13 @@ async function drawMap () {
         .attr('fill', (mapDataItem) => {
             let county = chargerAmount.find((item) => {
                 return item.county == mapDataItem.properties.GEN
-            }) 
+            })
             let amount = county.amount
-            if(amount <= 10) {
+            if (amount <= 10) {
                 return 'tomato'
-            } else if(amount <= 50) {
+            } else if (amount <= 50) {
                 return 'orange'
-            } else if(amount <= 100) {
+            } else if (amount <= 100) {
                 return 'lightgreen'
             } else {
                 return 'limegreen'
@@ -191,16 +213,16 @@ async function drawMap () {
         .attr('amount', (mapDataItem) => {
             let county = chargerAmount.find((item) => {
                 return item.county == mapDataItem.properties.GEN
-            }) 
+            })
             let amount = county.amount
             return amount
         })
         .on('mouseover', (mapDataItem) => {
             tooltip.transition()
                 .style('visibility', 'visible')
-                let county = chargerAmount.find((item) => {
-                    return item.county == mapDataItem.properties.GEN
-                })
+            let county = chargerAmount.find((item) => {
+                return item.county == mapDataItem.properties.GEN
+            })
 
             tooltip.text(county.county + ' - ' + county.amount + ' Ladesäulen')
 
