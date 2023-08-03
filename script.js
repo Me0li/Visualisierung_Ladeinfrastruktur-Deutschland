@@ -15,6 +15,25 @@ let chargerData
 let canvas = d3.select('#canvas')
 let tooltip = d3.select('#tooltip')
 
+var slider = d3
+    .sliderHorizontal()
+    .min(2017)
+    .max(2023)
+    .step(1)
+    .width(300)
+    .ticks(7)
+    .on('onchange', (val) => {
+      d3.select('#value').text(val);
+    });
+
+  d3.select('#slider')
+    .append('svg')
+    .attr('width', 500)
+    .attr('height', 100)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+
 //parses the jsonObject variable to a real parsedJsonObject and filters it into an array. 
 //In the array we need all the 'kreis_kreisfreie_stadt' attributes
 async function filterChargerJson(jsonObject) {
