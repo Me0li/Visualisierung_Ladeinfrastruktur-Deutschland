@@ -81,6 +81,10 @@ g{
     width: 100%;
 }
 
+.red {
+    color: #ff1a00;
+}
+
 #rightSide{
     display: flex;
     flex-direction: column;
