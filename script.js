@@ -16,7 +16,7 @@ let canvas = d3.select('#canvas')
 let tooltip = d3.select('#tooltip')
 
 const sliderWidth = 300
-const d3SliderWidth = sliderWidth + 50
+const sliderCanvasWidth = sliderWidth + 50
 
 var sliderYears = d3
     .sliderHorizontal()
@@ -32,7 +32,7 @@ var sliderYears = d3
 
 d3.select('#sliderYears')
     .append('svg')
-    .attr('width', d3SliderWidth)
+    .attr('width', sliderCanvasWidth)
     .attr('height', 100)
     .append('g')
     .attr('transform', 'translate(30,30)')
@@ -44,11 +44,10 @@ const minDate = new Date(2017, 0, 1),
     startYear = minDate.getFullYear();
 
 let dataMonth = []
-for (let year = 0; year < interval; year++) {
-    for (let month = 0; month < 10; month++) {
-        if (month % 3 == 0 || month == 0) {
-            dataMonth.push(new Date(startYear + year, month, 1));
-        }
+
+for (let month = 0; month < 10; month++) {
+    if (month % 3 == 0 || month == 0) {
+        dataMonth.push(new Date(startYear, month, 1));
     }
 }
 
@@ -65,7 +64,7 @@ var sliderMonth = d3
 
 d3.select('#sliderMonth')
     .append('svg')
-    .attr('width', d3SliderWidth)
+    .attr('width', sliderCanvasWidth)
     .attr('height', 100)
     .append('g')
     .attr('transform', 'translate(30,30)')
