@@ -118,7 +118,6 @@ async function filterChargerJson(jsonObject) {
     return arrReduced
 }
 
-//
 async function filterMapJson(jsonObject) {
     const arrFiltered = [];
     const arrExpanded = [];
