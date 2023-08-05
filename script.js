@@ -46,21 +46,31 @@ const minDate = new Date(2017, 0, 1),
 let dataMonth = []
 
 for (let month = 0; month < 10; month++) {
-    if (month % 3 == 0 || month == 0) {
-        dataMonth.push(new Date(startYear, month, 1));
-    }
+  if (month % 3 == 0 || month == 0) {
+      dataMonth.push(new Date(startYear, month, 1));
+  }
 }
+
+//for (let month = 0; month < 10; month++) {
+//    if (month % 3 == 0 || month == 0) {
+//        dataMonth.push(new Date(startYear, month, 1));
+//    }
+//}
+
+console.log(dataMonth)
 
 var sliderMonth = d3
     .sliderHorizontal()
-    .min(new Date(2017, 0, 1))
-    .max(new Date(2023, 3, 1))
-    .tickFormat(d3.timeFormat('%B'))
-    .marks(dataMonth)
+    .min(d3.min(dataMonth))
+    .max(d3.max(dataMonth))
+    .tickFormat(d3.timeFormat('%b'))
     .width(sliderWidth)
     .on('onchange', (val) => {
         d3.select('#value').text(val);
     });
+
+sliderMonth.tickValues(dataMonth)
+           .marks(dataMonth);
 
 d3.select('#sliderMonth')
     .append('svg')
