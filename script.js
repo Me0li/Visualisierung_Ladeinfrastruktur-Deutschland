@@ -18,14 +18,26 @@ let tooltip = d3.select('#tooltip')
 const sliderWidth = 300
 const sliderCanvasWidth = sliderWidth + 50
 
+const minDate = new Date(2017, 0, 1),
+    maxDate = new Date(2023, 3, 1),
+    interval = maxDate.getFullYear() - minDate.getFullYear() + 1,
+    startYear = minDate.getFullYear();
+    endYear = maxDate.getFullYear();
+
+let dataYears = []
+
+for (let year = startYear; year < endYear+1; year++) {
+    dataYears.push(new Date(year, 1, 1))
+}
+
 var sliderYears = d3
     .sliderHorizontal()
     .min(new Date(2017, 0, 1))
     .max(new Date(2023, 3, 1))
     .tickFormat(d3.timeFormat('%Y'))
-    .step(1)
     .width(sliderWidth)
-    .ticks(6)
+    .tickValues(dataYears)
+    .marks(dataYears)
     .on('onchange', (val) => {
         d3.select('#value').text(val);
     });
@@ -38,11 +50,6 @@ d3.select('#sliderYears')
     .attr('transform', 'translate(30,30)')
     .call(sliderYears);
 
-const minDate = new Date(2017, 0, 1),
-    maxDate = new Date(2023, 3, 1),
-    interval = maxDate.getFullYear() - minDate.getFullYear() + 1,
-    startYear = minDate.getFullYear();
-
 let dataMonth = []
 
 for (let month = 0; month < 10; month++) {
@@ -50,12 +57,6 @@ for (let month = 0; month < 10; month++) {
       dataMonth.push(new Date(startYear, month, 1));
   }
 }
-
-//for (let month = 0; month < 10; month++) {
-//    if (month % 3 == 0 || month == 0) {
-//        dataMonth.push(new Date(startYear, month, 1));
-//    }
-//}
 
 console.log(dataMonth)
 
@@ -65,12 +66,12 @@ var sliderMonth = d3
     .max(d3.max(dataMonth))
     .tickFormat(d3.timeFormat('%b'))
     .width(sliderWidth)
+    .tickValues(dataMonth)       
+    .marks(dataMonth)
     .on('onchange', (val) => {
         d3.select('#value').text(val);
     });
 
-sliderMonth.tickValues(dataMonth)
-           .marks(dataMonth);
 
 d3.select('#sliderMonth')
     .append('svg')
